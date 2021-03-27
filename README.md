@@ -42,11 +42,11 @@ The schema of the famous Iris dataset.
 
 ### Example Titanic Dataset
 
-We not for this example:
+We note for this example:
 
-	- if the number of strings is large then we don't treat it as an enum
-	- if there are missing values in the columns we don't add it
-	to our set of required keys
+- if the number of strings is large then we don't treat it as an enum
+- if there are missing values in the columns we don't add it
+to our set of required keys
 
 ```python
 >>> from csv import DictReader
