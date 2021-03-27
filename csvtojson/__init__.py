@@ -52,10 +52,10 @@ class SchemaReader:
 
         # Okay we're not calling it an enum
         # We instead compute maximum and minimum values
-        values = list(self._unique_value_sets[k])
+        values = list(map(float, self._unique_value_sets[k]))
         values.sort()
         column_schema["minimum"] = values[0]
-        column_schema['maximum'] = values[1]
+        column_schema['maximum'] = values[-1]
 
     def _add_string_data(self, column_schema, k):
         # If we have fewer than 8 strings
