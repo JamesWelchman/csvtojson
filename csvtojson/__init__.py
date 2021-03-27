@@ -1,7 +1,7 @@
 from csv import DictReader
 
 
-__all__ = ["jsonschema"]
+__all__ = ["jsonschema", "gen_json_records"]
 
 
 class SchemaReader:
@@ -132,3 +132,39 @@ def jsonschema(dict_reader):
         reader.process_row(row)
 
     return reader.jsonschema()
+
+
+def gen_json_records(dict_reader, schema):
+    if not isinstance(dict_reader, DictReader):
+        s = "jsonschema must be passed a DictReader instance"
+        raise TypeError(s)
+
+    for row in dict_reader:
+        record = {}
+        for key in schema['properties']:
+            empty = False
+            val = row[key]
+            if val is None or val == "":
+                empty = True
+
+            if empty and key in schema['required']:
+                raise ValueError(f"{key} may not be empty")
+
+            if empty:
+                continue
+
+            # Is it a number?
+            if schema['properties'][key]['type'] == "number":
+                val = float(val)
+
+            # Is it an enum?
+            enum = schema['properties'][key].get("enum")
+            if enum:
+                if val not in enum:
+                    s = f"{val} not in {key} enum"
+                    raise ValueError(s)
+
+            # Okay add the value to the record
+            record[key] = val
+
+        yield record

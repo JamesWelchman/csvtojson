@@ -2,6 +2,7 @@
 
 csvtojson will generate [jsonschema][1] from a python
 [DictReader][2] instance.
+Furthermore we implement a generator to generate JSON records.
 
 
 [1]: https://json-schema.org/
@@ -81,4 +82,31 @@ We not for this example:
               'ticket',
               'survived'],
  'type': 'object'}
+```
+
+
+### Example JSON of Iris Dataset
+To generate json we first generate a schema
+and then generate JSON records based on that.
+
+```python
+>>> from csv import DictReader
+>>> from csvtojson import jsonschema, gen_json_records
+>>> from pprint import pprint as pp
+>>> d1 = DictReader(open("iris.csv"))
+>>> d2 = DictReader(open("iris.csv"))
+>>> schema = jsonschema(d1)
+>>> gen = gen_json_records(d2, schema)
+>>> pp(next(gen))
+{'petal_length': 1.4,
+ 'petal_width': 0.2,
+ 'sepal_length': 5.1,
+ 'sepal_width': 3.5,
+ 'species': 'setosa'}
+ >>> pp(next(gen))
+ {'petal_length': 1.4,
+ 'petal_width': 0.2,
+ 'sepal_length': 4.9,
+ 'sepal_width': 3.0,
+ 'species': 'setosa'}
 ```
